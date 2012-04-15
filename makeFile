@@ -1,0 +1,5 @@
+g++ ./hrn/mainhrn.cc -o ./hrn/hrn
+g++ ./rts/mainrts.cc -o ./rts/rts
+g++ ./unix/mainunix.cc -o ./unix/unix
+g++ ./mfqs/mainmfqs.cc -o ./mfqs/mfqs
+g++ ./main.cc -o ./main

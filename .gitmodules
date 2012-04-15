@@ -1,0 +1,12 @@
+[submodule "hrn"]
+	path = hrn
+	url = git@github.com:f0ster/process-scheduler-highest-response-ratio-next.git
+[submodule "mfqs"]
+	path = mfqs
+	url = git@github.com:f0ster/process-scheduler-mfqs
+[submodule "rts"]
+	path = rts
+	url = git@github.com:f0ster/process-scheduler-rts
+[submodule "unix"]
+	path = unix
+	url = git@github.com:f0ster/process-scheduler-unix

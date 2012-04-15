@@ -1,0 +1,86 @@
+This program has a main in this directory.  From this main you can run all the schedulers.  Also in this directory there are directories for each scheduler.  In these directoreis there are binaries for each scheduler.  This is because are main forks and execs these other binaries.  Also the binaries are set up to run from the command line.  For MFQS you have to send in the input file and if you want you can send in the time quantum, age factor, and the number queues (3-5).  We did this so that we can use the shell below to generate data for are graphs.
+
+
+#!/bin/tcsh
+
+set filecount = 0
+foreach i (2 4 8 16)
+        foreach j (3 4 5)
+                foreach k (5 10 15)
+                        echo >> stats/output
+                        echo $i $j $k >> stats/output
+                        echo >> stats/output
+                        foreach c (0 1 2 3 4 5 6 7 8 9)
+                                mfqs ../samp_proc/out$c $i $j $k >> stats/output
+                                @ c = ($c + 1)
+                        end
+
+                end
+        end
+end
+
+
+Also from are main if you want to generate processes as you run the program, we have a function that makes a file with you data that you enter.  It then passes this file as input to the scheduler you choose rto run.  It saves the file that you made in the directory that the scheduler is in.
+
+We also wrote a process generator progam that took from command line the number of processes that you wanted to make.(code below)
+
+#include <iostream>
+#include <time.h>
+#include <cstdlib>
+
+using namespace std;
+
+int r(int u) {
+        return (rand()%u)+1;
+}
+
+int main(int argc, char** argv)
+{
+  if(argc != 2){
+                cout << "Usage: proc <number of processes to generate>" << endl;
+                exit(1);
+        }
+  const int MAX = atoi(argv[1]);
+  int priority, arrv, burst, deadline;
+        srand( time(NULL) );
+
+  cout << "Pid\tBurst\tArr\tPri\tDeadline\n" << endl;
+  for  (int i = 1; i <= MAX; i++) {
+
+      cout << i << "\t" ;
+      burst = r(150);
+                cout << burst << "\t" ;
+      arrv = r(79);
+                cout << arrv << "\t" ;
+      priority = r(90);
+                cout << priority << "\t" ;
+      deadline = r(150)+arrv;
+                cout << deadline << endl ;
+  }
+
+  return (0);
+}
+
+
+
+
+This is the code that we used to fork the 4 different programs and wait for the programs to finish before we ask if you want to run another program.  This code has while loop that waits for the status to not equal to the child_pid.
+
+
+
+
+		char *cmd[] = { programName, filename, (char*)0};
+                pid_t child_pid = fork();
+                int status, ch_stat;
+                if( child_pid < 0)
+                        cout << "error forking!" << endl;
+                if( child_pid == 0) //child
+                        execv(pathname,cmd);
+                else { //parent
+                        while( (status=wait(&ch_stat)) != child_pid ) {
+                                if( status < 0 && errno == ECHILD)
+                                        break;
+                                errno = 0;
+                        }
+                }
+
